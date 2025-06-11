@@ -26,13 +26,16 @@ This are some of the steps in development of the app
 7. Implement error handling for user inputs and file operations. Create a sample list with tasks if no saved list is found
 
 The teacher supplied us with a sample output mockup image and 2 file handling files that we could use. But since it has been a while since I worked with programming, I tried to make those features bit by bit. I asked AI to make me a code to save and load the task list from a json file. When I got it working I could better understand what the code in the files provided do, and I ended up using a lot of it anyway. Like the feature of creating a sample list with some tasks if no saved list is find during loading. This lead me into adding a constructor in the TodoTask class.
-Bellow are some screen grabs from the end result:
-
-![Skärmbild 2025-06-11 141243](https://github.com/user-attachments/assets/037923aa-8596-45c7-8e30-d391e27161a3)
+<br />
+<br />
+Here are some screen grabs from the end result:
+<br />
+<br />
+![Skärmbild 2025-06-11 144142](https://github.com/user-attachments/assets/0b291e00-60c8-41b8-adc7-3b0c7951207b)
 *Main menu*
 <br /><br /><br />
 ![Skärmbild 2025-06-11 141058](https://github.com/user-attachments/assets/60714351-b358-4048-beec-227f241a5735)
-*Show task list submenu and the list of tasks, sorted by projects*
+*"Show Task List" submenu and the list of tasks, sorted by projects*
 
 Also, I got inspired by the way a ColoredText class was used to color the texts. I made my own and named it DecoratedText, with methods for displaying "bullet points" (">>") and numbered lists to match the mockup, and also for displaying the output text with a certain color after the "bullet". 
 
