@@ -11,7 +11,14 @@ namespace ToDoTasker
 {
     public class TaskManager
     {
-        private const string SaveFile = "tasks_test.json";
+        private string SaveFile = "tasks_default.json";
+
+        public TaskManager(string saveFile)
+        {
+            if (!string.IsNullOrWhiteSpace(saveFile))
+                SaveFile = saveFile;
+            Load();
+        }
 
         public List<TodoTask> Tasks { get; set; } = [];
 
@@ -25,7 +32,6 @@ namespace ToDoTasker
         {
             return Tasks.OrderBy(t => t.Project);
         }
-
         // Returns the total number of tasks marked as Done
         public int GetTotalDoneTasks()
         {
@@ -66,7 +72,6 @@ namespace ToDoTasker
             }
         }
 
-  
         // Attempts to save the current list of tasks to a JSON file and returns true if successful, false otherwise
         public bool doSave()
         {
@@ -82,7 +87,6 @@ namespace ToDoTasker
             {
                 return false;
             }
-
         }
 
         // Attempts to load the list of tasks from a JSON file, if it exists, or creates a sample list if it does not
@@ -95,11 +99,10 @@ namespace ToDoTasker
                 {
                     var json = File.ReadAllText(SaveFile);
                     Tasks = JsonSerializer.Deserialize<List<TodoTask>>(json) ?? new List<TodoTask>();
-                    DecoratedText.BulletLineColored($"Loaded {Tasks.Count} tasks from {SaveFile}", ConsoleColor.Green);
+                    DecoratedText.WriteLine($"Loaded {Tasks.Count} tasks from {SaveFile}", ConsoleColor.Green);
                 } catch(Exception) {
-                    DecoratedText.BulletLineColored($"failed to load {SaveFile}", ConsoleColor.Red);
+                    DecoratedText.WriteLine($"failed to load {SaveFile}", ConsoleColor.Red);
                 }
-
             }
             else
             {
@@ -112,7 +115,7 @@ namespace ToDoTasker
                 new TodoTask("Individual Project", "C# .NET", DateTime.Now.AddDays(2), TaskStatus.Todo),
                 new TodoTask("HTML & CSS", "C# .NET",  DateTime.Now.AddMonths(1), TaskStatus.Todo)
                 ];
-                DecoratedText.BulletLineColored("Did not find a saved list to load. Created a sample list with some tasks.", ConsoleColor.Yellow);
+                DecoratedText.WriteLine("Did not find a saved list to load. Created a sample list with some tasks.", ConsoleColor.Yellow);
             }
         }
 

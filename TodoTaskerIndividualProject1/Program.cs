@@ -15,7 +15,7 @@ the current task list to file, and then restart the application with the former 
      Display a collection of tasks that can be sorted both by date and project  
      Support the ability to add, edit, mark as done, and remove tasks  
      Support a text-based user interface
-     Load and save task list to file The solution may also include other creative features at your discretion in case you wish to show some flair. 
+     Load and save task list to file 
 
 
    steps in development of the app:
@@ -23,41 +23,42 @@ the current task list to file, and then restart the application with the former 
 1. Define the `TodoTask` class with properties for title, due date, status, and project.
 2. Create the `TaskManager` class to manage a list of tasks, including methods for adding, removing, editing, marking as done.
 3. Implement methods in `TaskManager` to sort tasks by date and project.
-4. Use JSON serialization for saving and loading tasks to/from a file.
-5. Create a console application with a menu-driven interface to interact with the user.
-    5.1  methods for displaying bullet points and numbered lists to match mockup.
-    5.2  add submenus to main menu for show lists [by date, by project], editing [adding, updating, marking as done, remove], saving&quit.
+4. Create a console application with a menu-driven interface to interact with the user.
+5. Use JSON serialization for saving and loading tasks to/from a file.
+6. Further interface design (Methods for displaying bullet points and numbered lists to match mockup.
+   + Add submenus to main menu for show lists [by date, by project], editing [adding, updating, marking as done, remove], saving&quit.)
+7. Implement error handling for user inputs and file operations.
 */
 
+using Microsoft.VisualBasic;
 using System.Globalization;
 using ToDoTasker;
 using TaskStatus = ToDoTasker.TaskStatus;
 
-TaskManager manager = new TaskManager();
-manager.Load();
+TaskManager manager = new TaskManager("tasks_test66.json");
+
 bool firstRun = true;
 while (true)
 {
     // Show status of loaded tasks on first run
     if (firstRun) { firstRun = false; } else { Console.Clear(); }
 
-    DecoratedText.BulletLine("Welcome to ToDoTasker!");
+    DecoratedText.WriteLine("Welcome to ToDoTasker!");
     int pending = manager.GetTotalPendingTasks();
     int done = manager.GetTotalDoneTasks();
     string pendingText = pending == 1 ? "task to do" : "tasks to do";
     string doneText = done == 1 ? "task is done" : "tasks are done";
-    DecoratedText.Bullet();
-    Console.Write($"You have {pending} {pendingText} and {done} {doneText}");
+    DecoratedText.Write($"You have {pending} {pendingText} and {done} {doneText}");
     Console.ForegroundColor = ConsoleColor.Cyan;
     Console.WriteLine("!");
-    DecoratedText.BulletLine("ToDoTasker - Main Menu");
 
-    DecoratedText.BulletNumLine(1, "Show task list");
-    DecoratedText.BulletNumLine(2, "Add new task");
-    DecoratedText.BulletNumLine(3, "Edit task");
-    DecoratedText.BulletNumLine(4, "Save and Quit");
-    DecoratedText.Bullet();
-    Console.Write("pick an option: ");
+    DecoratedText.WriteLine("ToDoTasker - Main Menu");
+    DecoratedText.WriteLine("Pick an option:");
+    DecoratedText.WriteLine(1, "Show Task List (by date or project)");
+    DecoratedText.WriteLine(2, "Add New Task");
+    DecoratedText.WriteLine(3, "Edit Task (update, mark as done, remove)");
+    DecoratedText.WriteLine(4, "Save and Quit");
+    DecoratedText.Write("Your option: ");
     Console.ForegroundColor = ConsoleColor.Cyan;
     var input = Console.ReadLine();
     Console.ResetColor();
@@ -67,11 +68,10 @@ while (true)
         case "1":
             // Show task list submenu
             Console.Clear();
-            DecoratedText.BulletLine("Show Task List");
-            DecoratedText.BulletNumLine(1, "By date");
-            DecoratedText.BulletNumLine(2, "By project");
-            DecoratedText.Bullet();
-            Console.Write("pick an option: ");
+            DecoratedText.WriteLine("Show Task List");
+            DecoratedText.WriteLine(1, "By date");
+            DecoratedText.WriteLine(2, "By project");
+            DecoratedText.Write("pick an option: ");
             Console.ForegroundColor = ConsoleColor.Cyan;
             var listInput = Console.ReadLine();
             Console.ResetColor();
@@ -84,7 +84,7 @@ while (true)
                     ListTasks(manager.GetTasksSortedByProject());
                     break;
                 default:
-                    DecoratedText.BulletLineColored("Invalid option.", ConsoleColor.Red);
+                    DecoratedText.WriteLine("Invalid option.", ConsoleColor.Red);
                     break;
             }
             Pause();
@@ -95,12 +95,11 @@ while (true)
         case "3":
             // Edit task submenu
             Console.Clear();
-            DecoratedText.BulletLine("Edit Task");
-            DecoratedText.BulletNumLine(1, "Update task");
-            DecoratedText.BulletNumLine(2, "Mark task as done");
-            DecoratedText.BulletNumLine(3, "Remove task");
-            DecoratedText.Bullet();
-            Console.Write("pick an option: ");
+            DecoratedText.WriteLine("Edit Task");
+            DecoratedText.WriteLine(1, "Update task");
+            DecoratedText.WriteLine(2, "Mark task as done");
+            DecoratedText.WriteLine(3, "Remove task");
+            DecoratedText.Write("pick an option: ");
             Console.ForegroundColor = ConsoleColor.Cyan;
             var editInput = Console.ReadLine();
             Console.ResetColor();
@@ -116,7 +115,7 @@ while (true)
                     RemoveTask(manager);
                     break;
                 default:
-                    DecoratedText.BulletLineColored("Invalid option.", ConsoleColor.Red);
+                    DecoratedText.WriteLine("Invalid option.", ConsoleColor.Red);
                     Pause();
                     break;
             }
@@ -124,16 +123,16 @@ while (true)
         case "4":
             if (manager.doSave())
             {
-                DecoratedText.BulletLineColored("Tasks saved. Goodbye!", ConsoleColor.Green);
+                DecoratedText.WriteLine("Tasks saved. Goodbye!", ConsoleColor.Green);
             }
             else
             {
-                DecoratedText.BulletLineColored("Failed to save tasks.Bye.", ConsoleColor.Red);
+                DecoratedText.WriteLine("Failed to save tasks.Bye.", ConsoleColor.Red);
 
             }
             return;
         default:
-            DecoratedText.BulletLineColored("Invalid option.", ConsoleColor.Red);
+            DecoratedText.WriteLine("Invalid option.", ConsoleColor.Red);
             Pause();
             break;
     }
@@ -169,67 +168,58 @@ static void ListTasks(IEnumerable<TodoTask> tasks)
     }
     Console.WriteLine();
     if (i == 1)
-        DecoratedText.BulletLineColored("No tasks found.", ConsoleColor.Yellow);
+        DecoratedText.WriteLine("No tasks found.", ConsoleColor.Yellow);
 
 }
 
 static void AddTask(TaskManager manager)
 {
-    DecoratedText.Bullet();
-    Console.Write("Title: ");
+    DecoratedText.Write("Title: ");
     var title = Console.ReadLine();
 
-    DecoratedText.Bullet();
-    Console.Write("Project: ");
+    DecoratedText.Write("Project: ");
     var project = Console.ReadLine();
 
-    DecoratedText.Bullet();
-    Console.Write("Due date (yyyy-MM-dd): ");
-    // var dueDateStr = Console.ReadLine();
+    DecoratedText.Write("Due date (yyyy-MM-dd): ");
+  
     DateTime dueDate;
 
-    while (!DateTime.TryParse(Console.ReadLine(), out dueDate))
+    while (!DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out dueDate))
     {
-        DecoratedText.BulletLineColored("Invalid date format.", ConsoleColor.Red);
-        DecoratedText.Bullet();
-        Console.Write("Due date (yyyy-MM-dd): ");
+        DecoratedText.WriteLine("Invalid date format. Should be (yyyy-MM-dd)", ConsoleColor.Red);
+        DecoratedText.Write("Due date (yyyy-MM-dd): ");
     }
     manager.AddTask(new TodoTask(title, project, dueDate, TaskStatus.Todo));
-    DecoratedText.BulletLineColored("Task added.", ConsoleColor.Green);
+    DecoratedText.WriteLine("Task added.", ConsoleColor.Green);
     Pause();
 }
 
 static void EditTask(TaskManager manager)
 {
     ListTasks(manager.Tasks);
-    DecoratedText.Bullet();
-    Console.Write("Task number to edit: ");
+    DecoratedText.Write("Task number to edit: ");
     if (int.TryParse(Console.ReadLine(), out int idx) && idx > 0 && idx <= manager.Tasks.Count)
     {
         TodoTask task = manager.Tasks[idx - 1];//used non zero based index for user friendliness
-        DecoratedText.Bullet();
-        Console.Write($"New title (leave blank to keep '{task.Title}'): ");
-        DecoratedText.Bullet();
+        DecoratedText.Write($"New title (leave blank to keep '{task.Title}'): ");
         var title = Console.ReadLine();
-        DecoratedText.Bullet();
-        Console.Write($"New project (leave blank to keep '{task.Project}'): ");
+        DecoratedText.Write($"New project (leave blank to keep '{task.Project}'): ");
         var project = Console.ReadLine();
-        DecoratedText.Bullet();
-        Console.Write($"New due date (yyyy-MM-dd, leave blank to keep '{task.DueDate:yyyy-MM-dd}'): ");
+        DecoratedText.Write($"New due date (yyyy-MM-dd, leave blank to keep '{task.DueDate:yyyy-MM-dd}'): ");
         var dueDateStr = Console.ReadLine();
-
         if (!string.IsNullOrWhiteSpace(title))
             task.Title = title;
+        if (!string.IsNullOrWhiteSpace(project))
+            task.Project = project;
         if (!string.IsNullOrWhiteSpace(dueDateStr) &&
             DateTime.TryParseExact(dueDateStr, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dueDate))
             task.DueDate = dueDate;
-        if (!string.IsNullOrWhiteSpace(project))
-            task.Project = project;
-        DecoratedText.BulletLineColored("Task updated.", ConsoleColor.Green);
+   
+        DecoratedText.WriteLine("Task updated.", ConsoleColor.Green);
     }
     else
     {
-        DecoratedText.BulletLineColored("Invalid selection.", ConsoleColor.Red);
+        DecoratedText.WriteLine("Invalid selection.", ConsoleColor.Red);
     }
     Pause();
 }
@@ -237,16 +227,15 @@ static void EditTask(TaskManager manager)
 static void MarkTaskDone(TaskManager manager)
 {
     ListTasks(manager.Tasks);
-    DecoratedText.Bullet();
-    Console.Write("Task number to mark as done: ");
+    DecoratedText.Write("Task number to mark as done: ");
     if (int.TryParse(Console.ReadLine(), out int idx) && idx > 0 && idx <= manager.Tasks.Count)
     {
         manager.MarkTaskDone(idx - 1);//used non zero based index for user friendliness
-        DecoratedText.BulletLineColored("Task marked as done.", ConsoleColor.Green);
+        DecoratedText.WriteLine("Task marked as done.", ConsoleColor.Green);
     }
     else
     {
-        DecoratedText.BulletLineColored("Invalid selection.", ConsoleColor.Red);
+        DecoratedText.WriteLine("Invalid selection.", ConsoleColor.Red);
     }
     Pause();
 }
@@ -254,23 +243,21 @@ static void MarkTaskDone(TaskManager manager)
 static void RemoveTask(TaskManager manager)
 {
     ListTasks(manager.Tasks);
-    DecoratedText.Bullet();
-    Console.Write("Task number to remove: ");
+    DecoratedText.Write("Task number to remove: ");
     if (int.TryParse(Console.ReadLine(), out int idx) && idx > 0 && idx <= manager.Tasks.Count)
     {
         manager.RemoveTask(idx - 1);//used non zero based index for user friendliness
-        DecoratedText.BulletLineColored("Task removed.", ConsoleColor.Green);
+        DecoratedText.WriteLine("Task removed.", ConsoleColor.Green);
     }
     else
     {
-        DecoratedText.BulletLineColored("Invalid selection.", ConsoleColor.Red);
+        DecoratedText.WriteLine("Invalid selection.", ConsoleColor.Red);
     }
     Pause();
 }
 
 static void Pause()
 {
-    DecoratedText.Bullet();
-    Console.Write("Press any key to continue...");
+    DecoratedText.Write("Press any key to continue...");
     Console.ReadKey();
 }

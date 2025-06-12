@@ -8,40 +8,43 @@ namespace ToDoTasker
 {
     public static class DecoratedText
     {
-
-       public static void Bullet()
+        //writes a bullet point (>>)
+        //used to indicate a new line of text in the console
+        public static void Bullet()
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write(">> ");
             Console.ResetColor();
         }
-        public static void BulletLine(string lineText)
+        //writes bullet point and text with a newline at the end
+        public static void WriteLine(string lineText)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write(">> ");
-            Console.ResetColor();
+            Bullet();
             Console.WriteLine(lineText);
         }
-
-        public static void BulletNumLine(int num, string lineText)
+        //writes bullet point and text with a newline at the end, with a specified color
+        public static void WriteLine(string lineText, ConsoleColor color)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write(">> ");
+            Bullet();
+            Console.ForegroundColor = color;
+            Console.WriteLine(lineText);
             Console.ResetColor();
+        }
+        //writes bullet point and a number then text with a newline at the end (for menus)
+        public static void WriteLine(int num,string lineText)
+        {
+            Bullet();
             Console.Write("(");
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write($"{num}");
             Console.ResetColor();
             Console.WriteLine($") {lineText}");
         }
-
-        public static void BulletLineColored(string lineText, ConsoleColor color)
+        //writes a line of text with a bullet point and no newline at the end
+        public static void Write(string lineText)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write(">> ");
-            Console.ForegroundColor = color;
-            Console.WriteLine(lineText);
-            Console.ResetColor();
+            Bullet();
+            Console.Write(lineText);
         }
     }
 }
