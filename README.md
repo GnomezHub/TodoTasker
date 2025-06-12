@@ -37,13 +37,13 @@ Here are some screen grabs from the end result:
 ![Skärmbild 2025-06-11 141058](https://github.com/user-attachments/assets/60714351-b358-4048-beec-227f241a5735)
 *"Show Task List" submenu and the list of tasks, sorted by projects*
 
-Also, I got inspired by the way a ColoredText class was used to color the texts. I made my own and named it DecoratedText, with methods for displaying "bullet points" (">>") and numbered lists to match the mockup, and also for displaying the output text with a certain color after the "bullet". 
+Also, I got inspired by the way a ColoredText class was used to color the texts. I made my own and named it `DecoratedText`, with methods for displaying "bullet points" (">>") and numbered lists to match the mockup, and also for displaying the output text with a certain color after the "bullet". I later rewrote a bit to use overloading on some methods so I just called `DecoratedText.WriteLine` or `DecoratedText.Write` with different outcome based on arguments.
 
 
 
 #### *Improvments*
-There is a lot of room for improvment, but It's good enough in my opinion. I tried to keep all the-output-to-console -texts in the main program and separated from the other classes, and did so except for the messages that outputs according to the status of the loading of tasks.
-Another thing would be to keep the file handling code in a separate class and file. And maybe prompt the user to save the task list uppon adding or editing a task.
+There is a lot of room for improvment, but It's good enough in my opinion. I tried to keep all the-output-to-console -texts in the main program and separated from the other classes, and did so except for the messages that outputs according to the status of the loading of tasks. <br />
+Another thing would be to keep the file handling code in a separate class and file. And maybe prompt the user to save the task list uppon adding or editing a task. <br />
 For the next project I should be better in the planning stage and start by making UML diagrams. It has been over 20 years since I used it and at the time this is written I have yet to learn any UML diagram tools. Back in the day I learned about it was pen on paper.
 
 <p>
